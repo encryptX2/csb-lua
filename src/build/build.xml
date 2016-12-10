@@ -1,0 +1,17 @@
+<project name="BuildCGFile" default="dist" basedir="./">
+	<filelist id="filelist" dir="../">
+		<file name="output.lua" />
+		<file name="init.lua" />
+		<file name="main.lua" />
+	</filelist>
+
+	<target name="dist">
+		<echo message="--------- Starting concat... ---------" />
+		<concat destfile="final.lua" encoding="UTF-8" outputencoding="UTF-8" fixlastline="true">
+			<filelist refid="filelist" />
+		</concat>
+		<echo message="--------- Concat done - removing imports ---------" />
+		<replace token="require " file="final.lua" value="--" />
+		<echo message="--------- DONE! ---------" />
+	</target>
+</project>
