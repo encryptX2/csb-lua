@@ -5,29 +5,37 @@
 --[[del]]local json = require "util/dkjson"
 
 local gParams;
+local round = 0;
 
 function processStage()
-  local roundParams = initRoundParams();
-  error( json.encode(roundParams, {indent = true}) );
-  
-  io.stderr:write("Debug message\n");
+    local roundParams = initRoundParams();
+    dumpParams(gParams, roundParams);
+    --debug( json.encode(roundParams, {indent = true}) );
 
-  local firstCheckPoint = gParams.checkPoint[ roundParams.playerPods[1].nextCheckPointId .. "" ];
-  local secondCheckPoint = gParams.checkPoint[ roundParams.playerPods[2].nextCheckPointId .. "" ];
+    io.stderr:write("Debug message\n");
 
-  print(firstCheckPoint.x .. " " .. firstCheckPoint.y .. " 100");
-  print(secondCheckPoint.x .. " " .. secondCheckPoint.y .. " 100");
+    local firstCheckPoint = gParams.checkPoint[ roundParams.playerPods[1].nextCheckPointId ];
+    local secondCheckPoint = gParams.checkPoint[ roundParams.playerPods[2].nextCheckPointId ];
+
+    if(simulator) then
+        simulator.simulateRound();
+    else
+        print(firstCheckPoint.x .. " " .. firstCheckPoint.y .. " 100");
+        print(secondCheckPoint.x .. " " .. secondCheckPoint.y .. " 100");
+    end
 end
 
 function main()
-  gParams = initGlobalParams();
-  error( json.encode(gParams, {indent = true}) );
-  while true do
-    processStage();
-  end
+    gParams = initGlobalParams();
+    --debug( json.encode(gParams, {indent = true}) );
+    while true do
+        if( simulator and simulator.stopSimulation() ) then
+            break;
+        end
+        processStage();
+        
+        break;
+    end
 end
 
 main();
-
-
-

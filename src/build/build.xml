@@ -12,10 +12,8 @@
 			<filelist refid="filelist" />
 		</concat>
 		<echo message="--------- Concat done - removing imports ---------" />
-		<!-- Comment out simulation method calls -->
-		<replace token="simulation( " file="final.lua" value="--simulation(" />
 		<!-- Comment out lines starting with specified pattern-->
 		<replace token="--[[del]]" file="final.lua" value="--" />
-		<echo message="--------- DONE! ---------" />
+		<echo message="|--------| DONE! |--------|" />
 	</target>
 </project>
