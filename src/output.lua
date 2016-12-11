@@ -3,6 +3,6 @@
 function error(...)
   local messages = table.pack(...);
   for k, v in ipairs(messages) do
-    io.stderr:write("[" .. k .. "] " .. v .. "\n");
+    io.stderr:write("> " .. v .. "\n");
   end
 end

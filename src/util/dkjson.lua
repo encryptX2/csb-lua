@@ -58,7 +58,7 @@ if register_global_module_table then
   _G[global_module_name] = json
 end
 
---local _ENV = nil -- blocking globals in Lua 5.2
+--[[del]]local _ENV = nil -- blocking globals in Lua 5.2
 
 pcall (function()
   -- Enable access to blocked metatables.
@@ -710,107 +710,4 @@ if always_try_using_lpeg then
   pcall (json.use_lpeg)
 end
 
---return json
-------------------------- output.lua -------------------------
-
-function error(...)
-  local messages = table.pack(...);
-  for k, v in ipairs(messages) do
-    io.stderr:write("> " .. v .. "\n");
-  end
-end
-------------------------- init.lua -------------------------
-
---local simulator = require 'simulator';
-
-local gParams = {};
-
-function initGlobalParams()
-  local input = io;
-  if( simMode ) then
-    input = simulator.getGlobalParamIterator();
-  end
-  gParams.laps = tonumber(io.read());
-  error(gParams.laps);
-  gParams.checkpointCount = tonumber(io.read());
-  gParams.checkPoint = {};
-  for i = 0, gParams.checkpointCount-1 do
-    local next_token = string.gmatch(io.read(), "[^%s]+");
-    gParams.checkPoint[i] = {};
-    gParams.checkPoint[i].x = tonumber(next_token());
-    gParams.checkPoint[i].y = tonumber(next_token());
-  end
-end
-
-function initRoundParams()
-  local input = io;
-  if( simulator ) then
-    input = simulator.getRoundParamIterator();
-  end
-
-  local roundParams = {};
-  roundParams.playerPods = {};
-  roundParams.opponentPods = {};
-
-  for i = 1, 2 do
-    local next_token = string.gmatch(input.read(), "[^%s]+");
-    roundParams.playerPods[i] = {};
-    roundParams.playerPods[i].x = tonumber(next_token());
-    roundParams.playerPods[i].y = tonumber(next_token());
-    roundParams.playerPods[i].vx = tonumber(next_token());
-    roundParams.playerPods[i].vy = tonumber(next_token());
-    roundParams.playerPods[i].angle = tonumber(next_token());
-    roundParams.playerPods[i].nextCheckPointId = tonumber(next_token());
-  end
-  for i=1,2 do
-    local next_token = string.gmatch(input.read(), "[^%s]+");
-    roundParams.opponentPods[i] = {};
-    roundParams.opponentPods[i].x = tonumber(next_token());
-    roundParams.opponentPods[i].y = tonumber(next_token());
-    roundParams.opponentPods[i].vx = tonumber(next_token());
-    roundParams.opponentPods[i].vy = tonumber(next_token());
-    roundParams.opponentPods[i].angle = tonumber(next_token());
-    roundParams.opponentPods[i].nextCheckPointId = tonumber(next_token());
-  end
-  return roundParams;
-end
-
-------------------------- main.lua -------------------------
---require "output";
---require "init";
---require "neuralNetwork";
---local json = require "util/dkjson"
-
-function processStage()
-  local roundParams = initRoundParams();
-  error( json.encode(roundParams, {indent = true}) );
-
-  -- Write an action using print()
-  -- To debug: io.stderr:write("Debug message\n")
-
-
-  -- You have to output the target position
-  -- followed by the power (0 <= thrust <= 100)
-  -- i.e.: "x y thrust"
-  io.stderr:write("Debug message\n");
-
-  local firstCheckPoint = gParams.checkPoint[ roundParams.playerPods[1].nextCheckPointId ];
-  local secondCheckPoint = gParams.checkPoint[ roundParams.playerPods[2].nextCheckPointId ];
-
-  print(firstCheckPoint.x .. " " .. firstCheckPoint.y .. " 100");
-  print(secondCheckPoint.x .. " " .. secondCheckPoint.y .. " 100");
-end
-
-function main()
-  initGlobalParams();
-  error( json.encode(gParams, {indent = true}) );
-  while true do
-    processStage();
-  end
-end
-
-main();
-
-
-
-
+--[[del]]return json

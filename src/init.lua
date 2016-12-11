@@ -1,20 +1,41 @@
 ------------------------- init.lua -------------------------
-local gParams = {};
+
+--[[del]]local simulator = require 'simulator';
+
 
 function initGlobalParams()
-  gParams.laps = tonumber(io.read());
-  error "Insert nr of laps";
-  gParams.checkpointCount = tonumber(io.read());
+  local gParams = {};
+  if( simulator ) then
+    gParams = simulator.getGlobalParams();
+    if(not gParams) then
+      gParams = readGlobalParams( simulator.getGlobalParamIterator() );
+      simulator.setGlobalParams(gParams);
+    end
+  else
+    gParams = readGlobalParams(io);
+  end
+  return gParams;
+end
+
+function readGlobalParams(input)
+  local gParams = {};
+  gParams.laps = tonumber(input.read());
+  gParams.checkpointCount = tonumber(input.read());
   gParams.checkPoint = {};
-  for i = 1, gParams.checkpointCount do
-    local next_token = string.gmatch(io.read(), "[^%s]+");
+  for i = 0, gParams.checkpointCount-1 do
+    local next_token = string.gmatch(input.read(), "[^%s]+");
     gParams.checkPoint[i] = {};
     gParams.checkPoint[i].x = tonumber(next_token());
     gParams.checkPoint[i].y = tonumber(next_token());
   end
+  return gParams;
 end
 
 function initRoundParams()
+  if( simulator ) then
+    return simulator.getRoundParams();
+  end
+
   local roundParams = {};
   roundParams.playerPods = {};
   roundParams.opponentPods = {};
@@ -39,4 +60,5 @@ function initRoundParams()
     roundParams.opponentPods[i].angle = tonumber(next_token());
     roundParams.opponentPods[i].nextCheckPointId = tonumber(next_token());
   end
+  return roundParams;
 end
