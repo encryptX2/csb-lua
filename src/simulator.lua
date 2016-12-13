@@ -1,4 +1,5 @@
 require 'fileio';
+require 'constants';
 local GLOBAL_PARAM_FILE = 'src/config/scenarios/1/globals.conf';
 local ROUND_PARAM_FILE  = 'src/config/scenarios/1/round.conf';
 
@@ -36,7 +37,9 @@ end
 
 -- Time to compute next round params
 function simulator.simulateRound()
-
+    -- Compute one whole round with pod states, collisions and next checkpoint computation
+    -- + end of game recognition
+    
 end
 
 return simulator;

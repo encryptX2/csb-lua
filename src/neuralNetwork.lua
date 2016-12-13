@@ -1,5 +1,12 @@
-function getNetwork()
+local network = {};
 
-
+network.init = function()
 end
-local network = getNetwork();
+
+network.addInput = function(networkInputParams)
+end
+
+network.computeOutput = function()
+end
+
+return network;

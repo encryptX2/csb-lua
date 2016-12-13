@@ -1,6 +1,6 @@
 <project name="BuildCGFile" default="dist" basedir="./">
 	<filelist id="filelist" dir="../">
-		<file name="util/dkjson.lua" />
+		<!--<file name="util/dkjson.lua" />-->
 		<file name="output.lua" />
 		<file name="init.lua" />
 		<file name="main.lua" />
