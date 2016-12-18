@@ -1,19 +1,20 @@
 local json = require "util/dkjson"
 
 function file_exists(file)
-    local f ,a ,b = io.open(file, "rb")
-    if f then f:close() end
-    print(a, b);
-    return f ~= nil
+    local f ,a ,b = io.open(file, "rb");
+    if f then f:close() end;
+    return f ~= nil;
 end
 
 function lines_from(file)
-    if not file_exists(file) then return {} end
-    lines = {}
+    if not file_exists(file) then return {} end;
+    local lines = {};
     for line in io.lines(file) do
-        lines[#lines + 1] = line
+        if( not string.match(line,"^#.*") ) then
+            lines[#lines + 1] = line;
+        end
     end
-    return lines
+    return lines;
 end
 
 function getFileLineIterator( filePath )

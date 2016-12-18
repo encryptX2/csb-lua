@@ -1,6 +1,6 @@
 ------------------------- output.lua -------------------------
 
-function debug(...)
+function consout(...)
     local messages = table.pack(...);
     for k, v in ipairs(messages) do
         io.stderr:write(v .. "\n");
@@ -8,24 +8,24 @@ function debug(...)
 end
 
 function dumpParams(gParams, roundParams)
-    debug "--------| Global params |--------";
-    debug(gParams.laps);
-    debug(gParams.checkpointCount);
+    consout "--------| Global params |--------";
+    consout(gParams.laps);
+    consout(gParams.checkpointCount);
     for i = 0, #gParams.checkPoint do
-        debug(gParams.checkPoint[i].x .. " " .. gParams.checkPoint[i].y);
+        consout(gParams.checkPoint[i].x .. " " .. gParams.checkPoint[i].y);
     end
-    debug "--------| Round params |--------";
+    consout "--------| Round params |--------";
     for i = 1, #roundParams.playerPods do
-        debug(roundParams.playerPods[i].x .. " " .. roundParams.playerPods[i].y .. " "
+        consout(roundParams.playerPods[i].x .. " " .. roundParams.playerPods[i].y .. " "
             .. roundParams.playerPods[i].vx .. " " .. roundParams.playerPods[i].vy .. " "
             .. roundParams.playerPods[i].angle .. " " .. roundParams.playerPods[i].nextCheckPointId);
     end
     for i = 1, #roundParams.opponentPods do
-        debug(roundParams.opponentPods[i].x .. " " .. roundParams.opponentPods[i].y .. " "
+        consout(roundParams.opponentPods[i].x .. " " .. roundParams.opponentPods[i].y .. " "
             .. roundParams.opponentPods[i].vx .. " " .. roundParams.opponentPods[i].vy .. " "
             .. roundParams.opponentPods[i].angle .. " " .. roundParams.opponentPods[i].nextCheckPointId);
     end
-    debug "--------| END |--------";
+    consout "--------| END |--------";
 end
 ------------------------- init.lua -------------------------
 
@@ -110,20 +110,40 @@ end
 local gParams;
 local round = 0;
 
+function getPodActions(gParams, roundParams)
+
+    local firstCheckPoint = gParams.checkPoint[ roundParams.playerPods[1].nextCheckPointId ];
+    local secondCheckPoint = gParams.checkPoint[ roundParams.playerPods[2].nextCheckPointId ];
+
+    local pod1 = {};
+    pod1.action = "move";
+    pod1.x = firstCheckPoint.x;
+    pod1.y = firstCheckPoint.y;
+    pod1.thrust = 100;
+    
+    local pod2 = {};
+    pod2.action = "move";
+    pod2.x = secondCheckPoint.x;
+    pod2.y = secondCheckPoint.y;
+    pod2.thrust = 100;
+
+    return pod1, pod2;
+end
+
 function processStage()
     local roundParams = initRoundParams();
     dumpParams(gParams, roundParams);
 
     --io.stderr:write("Debug message\n");
-
-    local firstCheckPoint = gParams.checkPoint[ roundParams.playerPods[1].nextCheckPointId ];
-    local secondCheckPoint = gParams.checkPoint[ roundParams.playerPods[2].nextCheckPointId ];
-
+    --consout('Pod 1 x / y: ' .. roundParams.playerPods[1].x .. '/' .. roundParams.playerPods[1].y);
+    --consout('Pod 2 x / y: ' .. roundParams.playerPods[2].x .. '/' .. roundParams.playerPods[2].y);
+    local pod1, pod2 = getPodActions( gParams, roundParams );
+    
     if(simulator) then
-        simulator.simulateRound();
+        simulator.simulateRound(gParams, roundParams, pod1, pod2);
     else
-        print(firstCheckPoint.x .. " " .. firstCheckPoint.y .. " 100");
-        print(secondCheckPoint.x .. " " .. secondCheckPoint.y .. " 100");
+        print( pod1.x .. " " .. pod1.y .. " " .. pod1.thrust);
+        print( pod2.x .. " " .. pod2.y .. " " .. pod2.thrust);
     end
 end
 
