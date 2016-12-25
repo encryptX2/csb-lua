@@ -8,7 +8,7 @@ local ROUND_PARAM_FILE  = 'src/config/scenarios/5/round.conf';
 local nextGlobalParams;
 local nextRoundParams;
 
-local simulator = {};
+simulator = {};
 -- Global params
 function simulator.getGlobalParams()
     return nextGlobalParams;
@@ -65,12 +65,20 @@ function getNextStepCoord(playerPod, podAction)
     if( podAction.action == "move"  ) then
         local desVector = { vx = podAction.x - playerPod.x, vy = podAction.y - playerPod.y };
         -- Determine current ship direction vector
-        local angle;
+        local desAngle;
         if( desVector.vx ~= 0 ) then
-            angle = math.atan( desVector.vy / desVector.vx) * 180 / 3.141592;
-            consout( "Angle: " .. angle );
-            angle = compensateQuadrant( desVector.vx, desVector.vy, angle );
-            consout( "Compensated angle: " .. angle );
+            desAngle = math.atan( desVector.vy / desVector.vx) * 180 / 3.141592;
+            desAngle = compensateQuadrant( desVector.vx, desVector.vy, desAngle );
+            consout( "Compensated angle: " .. desAngle );
+            if( math.abs(desAngle - playerPod.angle) > 18 ) then
+                local reflectedDesAngle = desAngle > 270 and (desAngle -360) or (desAngle +360);
+                
+                -- The angle might still be lower than 18. E.g. 
+                if( math.abs(reflectedDesAngle - playerPod.angle) > 18 ) then
+                
+                end
+                
+            end
         else
             angle = desVector.vy > 0 and 90 or 270;
         end
