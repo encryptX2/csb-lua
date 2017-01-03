@@ -132,7 +132,7 @@ end
 
 function processStage()
     local roundParams = initRoundParams();
-    dumpParams(gParams, roundParams);
+    --dumpParams(gParams, roundParams);
 
     --io.stderr:write("Debug message\n");
     --consout('Pod 1 x / y: ' .. roundParams.playerPods[1].x .. '/' .. roundParams.playerPods[1].y);
@@ -140,7 +140,7 @@ function processStage()
     local pod1, pod2 = getPodActions( gParams, roundParams );
     
     if(simulator) then
-        simulator.simulateRound(gParams, roundParams, pod1, pod2);
+        simulator.simulateRound(gParams, roundParams, pod1, pod2, round);
     else
         print( pod1.x .. " " .. pod1.y .. " " .. pod1.thrust);
         print( pod2.x .. " " .. pod2.y .. " " .. pod2.thrust);
@@ -150,12 +150,12 @@ end
 function main()
     gParams = initGlobalParams();
     while true do
+        round = round +1;
         if( simulator and simulator.stopSimulation() ) then
             break;
         end
         processStage();
-        
-        --break;
+        --if round > 0 then break end;
     end
 end
 

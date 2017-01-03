@@ -14,6 +14,7 @@
 		<echo message="--------- Concat done - removing imports ---------" />
 		<!-- Comment out lines starting with specified pattern-->
 		<replace token="--[[del]]" file="final.lua" value="--" />
+		<replace token="--[add]" file="final.lua" value="" />
 		<echo message="|--------| DONE! |--------|" />
 	</target>
 </project>
